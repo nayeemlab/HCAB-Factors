@@ -1,0 +1,493 @@
+gen wgt=v005/1000000
+svyset [pw=wgt],psu(v001) strata(v022)
+
+
+*Permission
+svy: tab v467b
+gen permission=v467b
+replace permission =. if v467b == .
+replace permission = 0 if v467b == 1
+replace permission = 1 if v467b == 0
+replace permission = 1 if v467b == 2
+replace permission = . if v467b == 9
+label define permission1  1 "Yes" 0 "No"
+label values permission permission1
+svy: tab permission,count format(%20.0f)
+
+*Money
+svy: tab v467c
+gen money=v467c
+replace money =. if v467c == 0
+replace money =0 if v467c == 1
+replace money = 1 if v467c == 0
+replace money =1 if v467c == 2
+replace money = . if v467c == 9
+label define money1  1 "Yes" 0 "No"
+label values money money1
+svy: tab money,count format(%20.0f)
+
+*Distance
+svy: tab v467d
+gen distance=v467d
+replace distance =. if v467d == 0
+replace distance =0 if v467d == 1
+replace distance = 1 if v467d == 0
+replace distance =1 if v467d == 2
+replace distance = . if v467d == 9
+label define distance1  1 "Yes" 0 "No"
+label values distance distance1
+svy: tab distance,count format(%20.0f)
+
+
+*Alone
+svy: tab v467f
+gen alone=v467f
+replace alone =.  if v467f == 0
+replace alone =0 if v467f == 1
+replace alone = 1 if v467f == 0
+replace alone =1 if v467f == 2
+replace alone = . if v467f == 9
+label define alone1 1 "Yes" 0 "No"
+label values alone alone1
+svy: tab alone,count format(%20.0f)
+
+*at least one
+gen least = 0
+replace least = 1 if (permission == 1|distance == 1|money == 1|alone == 1)
+replace least = . if (permission == .&distance == .&money == .&alone == .)
+label define least1 1 "Yes" 0 "No"
+label values least least1
+label var least "At least facing one barrier"
+svy: tab least,count format(%20.0f)
+
+
+*Mother Age.
+svy: tab v013
+gen mage1=v013
+recode mage1 1=1
+recode mage1 2=2
+recode mage1 3/9=3
+label define mage1 1 "15-19" 2 "20-24" 3 "25+"
+label values mage1 mage1
+svy: tab mage1
+
+svy: tab mage1 permission, row
+svy: tab mage1 permission, count format(%20.0f)
+svy: tab mage1 money, row
+svy: tab mage1 money, count format(%20.0f)
+svy: tab mage1 distance, row
+svy: tab mage1 distance, count format(%20.0f)
+svy: tab mage1 alone, row
+svy: tab mage1 alone, count format(%20.0f)
+svy: tab mage1 least, row
+svy: tab mage1 least, count format(%20.0f)
+
+
+*Marital status
+svy: tab v501
+gen mstatus = v501
+recode mstatus 0=0
+recode mstatus 1/2=1
+recode mstatus 3/5=2
+label define mstatus1 0 "Never Married" 1 "Married/Living Together" 2 "Divorced/Sperated/Widowed"
+label values mstatus mstatus1
+label var mstatus "Marital status of respondents"
+svy: tab mstatus
+
+svy: tab mstatus permission, row
+svy: tab mstatus permission, count format(%20.0f)
+svy: tab mstatus money, row
+svy: tab mstatus money, count format(%20.0f)
+svy: tab mstatus distance, row
+svy: tab mstatus distance, count format(%20.0f)
+svy: tab mstatus alone, row
+svy: tab mstatus alone, count format(%20.0f)
+svy: tab mstatus least, row
+svy: tab mstatus least, count format(%20.0f)
+
+*Residence.
+svy: tab v025
+gen area1=v025
+recode area1 1=1
+recode area1 2=2
+label define area1  2 "Rural" 1 "Urban"
+label values area1 area1
+svy: tab area1
+
+svy: tab area1 permission, row
+svy: tab area1 permission, count format(%20.0f)
+svy: tab area1 money, row
+svy: tab area1 money, count format(%20.0f)
+svy: tab area1 distance, row
+svy: tab area1 distance, count format(%20.0f)
+svy: tab area1 alone, row
+svy: tab area1 alone, count format(%20.0f)
+svy: tab area1 least, row
+svy: tab area1 least, count format(%20.0f)
+
+
+*Mother Education.
+svy: tab v106
+gen melevel1 = v106
+label define melevel1  0 "No education" 1 "Primary" 2 "Secondary" 3 "Higher"
+label values melevel melevel1
+svy: tab melevel1
+
+
+svy: tab melevel1 permission, row
+svy: tab melevel1 permission, count format(%20.0f)
+svy: tab melevel1 money, row
+svy: tab melevel1 money, count format(%20.0f)
+svy: tab melevel1 distance, row
+svy: tab melevel1 distance, count format(%20.0f)
+svy: tab melevel1 alone, row
+svy: tab melevel1 alone, count format(%20.0f)
+svy: tab melevel1 least, row
+svy: tab melevel1 least, count format(%20.0f)
+
+*Father Education.
+svy: tab v701
+gen helevel1 = v701
+recode helevel1 8=.
+label define helevel1  0 "No education" 1 "Primary" 2 "Secondary" 3 "Higher"
+label values helevel helevel1
+svy: tab helevel1
+
+
+svy: tab helevel permission, row
+svy: tab helevel permission, count format(%20.0f)
+svy: tab helevel money, row
+svy: tab helevel money, count format(%20.0f)
+svy: tab helevel distance, row
+svy: tab helevel distance, count format(%20.0f)
+svy: tab helevel alone, row
+svy: tab helevel alone, count format(%20.0f)
+svy: tab helevel least, row
+svy: tab helevel least, count format(%20.0f) 
+
+*Father Age.
+svy: tab v730
+gen fage1=v730
+recode fage1 15/24=1
+recode fage1 25/29=2
+recode fage1 30/34=3
+recode fage1 35/95=4
+recode fage1 96/98=.
+label define fage1 1 "<= 24" 2 "25-29" 3 "30-34" 4 "35+"
+label values fage1 fage1
+svy: tab fage1
+
+svy: tab fage1 permission, row
+svy: tab fage1 permission, count format(%20.0f)
+svy: tab fage1 money, row
+svy: tab fage1 money, count format(%20.0f)
+svy: tab fage1 distance, row
+svy: tab fage1 distance, count format(%20.0f)
+svy: tab fage1 alone, row
+svy: tab fage1 alone, count format(%20.0f)
+svy: tab fage1 least, row
+svy: tab fage1 least, count format(%20.0f)
+
+*Mother work.
+svy: tab v714
+gen mwork1 = v714
+label define mwork1  0 "No" 1 "Yes"
+label values mwork mwork1
+svy: tab mwork
+
+
+svy: tab mwork permission, row
+svy: tab mwork permission, count format(%20.0f)
+svy: tab mwork money, row
+svy: tab mwork money, count format(%20.0f)
+svy: tab mwork distance, row
+svy: tab mwork distance, count format(%20.0f)
+svy: tab mwork alone, row
+svy: tab mwork alone, count format(%20.0f)
+svy: tab mwork least, row
+svy: tab mwork least, count format(%20.0f)
+
+*Wealth index Status.
+gen wind1= v190
+svy: tab wind1
+recode wind1 1/2=1
+recode wind1 3=2
+recode wind1 4/5=3
+label define wind2  1 "Poor" 2 "Middle" 3 "Rich"
+label values wind1 wind2
+svy: tab wind1
+
+svy: tab wind1 permission, row
+svy: tab wind1 permission, count format(%20.0f)
+svy: tab wind1 money, row
+svy: tab wind1 money, count format(%20.0f)
+svy: tab wind1 distance, row
+svy: tab wind1 distance, count format(%20.0f)
+svy: tab wind1 alone, row
+svy: tab wind1 alone, count format(%20.0f)
+svy: tab wind1 least, row
+svy: tab wind1 least, count format(%20.0f)
+
+*HH family members.
+gen hhmembers = v136
+svy: tab hhmembers
+replace  hhmembers    = 1 if (hhmembers <= 3) 
+replace  hhmembers   = 2 if (hhmembers > 3)
+label define hhmembers1 1 " <= 3" 2 " > 3"
+label values hhmembers hhmembers1
+svy: tab hhmembers
+
+svy: tab hhmembers permission, row
+svy: tab hhmembers permission, count format(%20.0f)
+svy: tab hhmembers money, row
+svy: tab hhmembers money, count format(%20.0f)
+svy: tab hhmembers distance, row
+svy: tab hhmembers distance, count format(%20.0f)
+svy: tab hhmembers alone, row
+svy: tab hhmembers alone, count format(%20.0f)
+svy: tab hhmembers least, row
+svy: tab hhmembers least, count format(%20.0f)
+
+*household head sex.
+gen hhsex1 = v151
+svy: tab hhsex1
+label define hhsex1 1 "Male" 2 "Female"
+label values hhsex hhsex1
+svy: tab hhsex1
+
+svy: tab hhsex1 permission, row
+svy: tab hhsex1 permission, count format(%20.0f)
+svy: tab hhsex1 money, row
+svy: tab hhsex1 money, count format(%20.0f)
+svy: tab hhsex1 distance, row
+svy: tab hhsex1 distance, count format(%20.0f)
+svy: tab hhsex1 alone, row
+svy: tab hhsex1 alone, count format(%20.0f)
+svy: tab hhsex1 least, row
+svy: tab hhsex1 least, count format(%20.0f)
+
+*ANC (NW).
+svy: tab m14_1
+gen anc=m14_1
+recode anc 0/3=1
+recode anc 4/20=2
+recode anc 98=.
+label define anc1 1 "less4" 2 "4above"
+label values anc anc1
+svy: tab anc
+
+svy: tab anc permission, row
+svy: tab anc permission, count format(%20.0f)
+svy: tab anc money, row
+svy: tab anc money, count format(%20.0f)
+svy: tab anc distance, row
+svy: tab anc distance, count format(%20.0f)
+svy: tab anc alone, row
+svy: tab anc alone, count format(%20.0f)
+svy: tab anc least, row
+svy: tab anc least, count format(%20.0f)   
+
+*tv
+svy: tab v121
+gen tv=v121
+svy: tab tv
+recode tv 0=0
+recode tv 1=1
+recode tv 7=0
+
+svy: tab tv permission, row
+svy: tab tv permission, count format(%20.0f)
+svy: tab tv money, row
+svy: tab tv money, count format(%20.0f)
+svy: tab tv distance, row
+svy: tab tv distance, count format(%20.0f)
+svy: tab tv alone, row
+svy: tab tv alone, count format(%20.0f)
+svy: tab tv least, row
+svy: tab tv least, count format(%20.0f)
+
+*radio
+svy: tab v120
+gen radio=v120
+svy: tab radio
+recode radio 0=0
+recode radio 1=1
+recode radio 7=0
+
+svy: tab radio permission, row
+svy: tab radio permission, count format(%20.0f)
+svy: tab radio money, row
+svy: tab radio money, count format(%20.0f)
+svy: tab radio distance, row
+svy: tab radio distance, count format(%20.0f)
+svy: tab radio alone, row
+svy: tab radio alone, count format(%20.0f)
+svy: tab radio least, row
+svy: tab radio least, count format(%20.0f)
+
+*media
+gen media = tv + radio
+tab media
+recode media 0=0
+recode media 1/2=1
+label define media1 0 "No" 1 "Yes"
+label values media media1
+
+svy: tab media permission, row
+svy: tab media permission, count format(%20.0f)
+svy: tab media money, row
+svy: tab media money, count format(%20.0f)
+svy: tab media distance, row
+svy: tab media distance, count format(%20.0f)
+svy: tab media alone, row
+svy: tab media alone, count format(%20.0f)
+svy: tab media least, row
+svy: tab media least, count format(%20.0f)
+
+***Child Information
+
+*C-section.
+gen csection = m17_1
+svy: tab csection
+label define csection1 0 "No" 1 "Yes"
+label values csection csection1
+
+
+svy: tab csection permission, row
+svy: tab csection permission, count format(%20.0f)
+svy: tab csection money, row
+svy: tab csection money, count format(%20.0f)
+svy: tab csection distance, row
+svy: tab csection distance, count format(%20.0f)
+svy: tab csection alone, row
+svy: tab csection alone, count format(%20.0f)
+svy: tab csection least, row
+svy: tab csection least, count format(%20.0f)
+
+
+*Type of toilet facility.
+svy: tab v116
+gen tf1=v116
+recode tf1 10/15=1
+recode tf1 20/97=2
+recode tf1 99=.
+label define tf1 1 "modern toilet" 2 "Other"
+label values tf1 tf1
+svy: tab tf1
+
+svy: tab tf1 permission, row
+svy: tab tf1 permission, count format(%20.0f)
+svy: tab tf1 money, row
+svy: tab tf1 money, count format(%20.0f)
+svy: tab tf1 distance, row
+svy: tab tf1 distance, count format(%20.0f)
+svy: tab tf1 alone, row
+svy: tab tf1 alone, count format(%20.0f)
+svy: tab tf1 least, row
+svy: tab tf1 least, count format(%20.0f)
+
+*Place of delivery (NW).
+svy: tab m15_1
+gen Place_delivery = m15_1
+recode Place_delivery 10/12=1
+recode Place_delivery 20/96=2
+recode Place_delivery 99=.
+label define Place_delivery1 1 "Home" 2 "HF"
+label values Place_delivery Place_delivery1
+svy: tab Place_delivery
+
+
+svy: tab Place_delivery permission, row
+svy: tab Place_delivery permission, count format(%20.0f)
+svy: tab Place_delivery money, row
+svy: tab Place_delivery money, count format(%20.0f)
+svy: tab Place_delivery distance, row
+svy: tab Place_delivery distance, count format(%20.0f)
+svy: tab Place_delivery alone, row
+svy: tab Place_delivery alone, count format(%20.0f)
+svy: tab Place_delivery least, row
+svy: tab Place_delivery least, count format(%20.0f)
+
+*birth order
+svy: tab bord_01
+gen birthord =bord_01
+svy: tab birthord 
+recode birthord 1/3=1
+recode birthord 4/6=2
+recode birthord 7/17=3
+label define birthord1 1 "1-3" 2 "4-6" 3 "7-17"
+label values birthord birthord1
+
+svy: tab birthord permission, row
+svy: tab birthord permission, count format(%20.0f)
+svy: tab birthord money, row
+svy: tab birthord money, count format(%20.0f)
+svy: tab birthord distance, row
+svy: tab birthord distance, count format(%20.0f)
+svy: tab birthord alone, row
+svy: tab birthord alone, count format(%20.0f)
+svy: tab birthord least, row
+svy: tab birthord least, count format(%20.0f)
+
+*Early Childhood Disease.
+*Fever
+svy: tab h22_1
+gen fever=h22_1
+recode fever 8=.
+label define fever1 0 "NO" 1"Yes"
+label values fever fever1
+svy: tab fever
+
+svy: tab fever permission, row
+svy: tab fever permission, count format(%20.0f)
+svy: tab fever money, row
+svy: tab fever money, count format(%20.0f)
+svy: tab fever distance, row
+svy: tab fever distance, count format(%20.0f)
+svy: tab fever alone, row
+svy: tab fever alone, count format(%20.0f)
+svy: tab fever least, row
+svy: tab fever least, count format(%20.0f)
+
+
+*Cough
+svy: tab h31_1
+gen cough=h31_1
+recode cough 1/2 = 1
+recode cough 8=.
+label define cough1 0 "NO" 1"Yes"
+label values cough cough1
+svy: tab cough
+
+svy: tab cough permission, row
+svy: tab cough permission, count format(%20.0f)
+svy: tab cough money, row
+svy: tab cough money, count format(%20.0f)
+svy: tab cough distance, row
+svy: tab cough distance, count format(%20.0f)
+svy: tab cough alone, row
+svy: tab cough alone, count format(%20.0f)
+svy: tab cough least, row
+svy: tab cough least, count format(%20.0f)
+
+*diarrhea
+svy: tab h11_1
+gen diarrhea=h11_1
+recode diarrhea 1/2 = 1
+recode diarrhea 8=.
+label define diarrhea1 0 "NO" 1"Yes"
+label values diarrhea diarrhea1
+svy: tab diarrhea
+
+svy: tab diarrhea permission, row
+svy: tab diarrhea permission, count format(%20.0f)
+svy: tab diarrhea money, row
+svy: tab diarrhea money, count format(%20.0f)
+svy: tab diarrhea distance, row
+svy: tab diarrhea distance, count format(%20.0f)
+svy: tab diarrhea alone, row
+svy: tab diarrhea alone, count format(%20.0f)
+svy: tab diarrhea least, row
+svy: tab diarrhea least, count format(%20.0f)
+
+*end of do file*
